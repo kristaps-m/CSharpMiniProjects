@@ -20,5 +20,10 @@ namespace Minesweeper
             var board = new Board(this, 9, 9, 10);
             board.SetupBoard();
         }
+
+        private void Minesweeper_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

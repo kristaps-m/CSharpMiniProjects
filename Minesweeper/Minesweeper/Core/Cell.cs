@@ -30,21 +30,37 @@ namespace Minesweeper.Core
 
         public void SetupDesign()
         {
-            //this.BackColor = SystemColors.ButtonFace;
+            this.BackColor = SystemColors.ButtonFace;
             this.Location = new Point(XLoc * CellSize, YLoc * CellSize);
             this.Size = new Size(CellSize, CellSize);
             this.UseVisualStyleBackColor = false;
             this.Font = new Font("Verdana", 15.75F, FontStyle.Bold);
+            //if (this.CellState == CellState.Opened)
+            //{
+            //    this.Text = $"{NumMines}";
+            //}
+            //if (this.CellState == CellState.Closed && this.CellType == CellType.Flagged)
+            //{
+            //    this.Text = "F";
+            //}
         }
 
         public void OnFlag()
         {
-
+            this.CellType = CellType.Flagged;
+            if (this.CellState == CellState.Closed && this.CellType == CellType.Flagged)
+            {
+                this.Text = "F";
+            }
         }
 
         public void OnClick(bool recursiveCall = false)
         {
-
+            this.CellState = CellState.Opened;
+            if (this.CellState == CellState.Opened)
+            {
+                this.Text = $"{NumMines}";
+            }
         }
 
         /// <summary>
