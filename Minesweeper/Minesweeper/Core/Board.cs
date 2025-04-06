@@ -55,6 +55,7 @@ namespace Minesweeper.Core
             //this.Cells[1, 1].CellType = CellType.Mine;
             //Console.WriteLine(this.Cells[1,1].CellType);
             this.GenerateMinesOnBoard();
+            this.GenerateMinesCountOnBoard();
             //var c = new Cell
             //{
             //    CellState = CellState.Closed,
@@ -72,6 +73,46 @@ namespace Minesweeper.Core
             //this.Minesweeper.Controls.Add(c);
         }
 
+        private void GenerateMinesCountOnBoard()
+        {
+            for (int h = 1; h < this.Height-1; h++)
+            {
+                for (int w = 1; w < this.Width-1; w++)
+                {
+                    Cell c = this.Cells[w, h];
+                    //if (c.CellType == CellType.Mine)
+                    //{
+                    //    minesCount++;
+                    //}
+                    if(c.CellType != CellType.Mine)
+                    {
+                        int nearMinesNumber = this.GetNearMinesCount(c);
+                        c.NumMines = nearMinesNumber;
+
+                    }
+                }
+            }
+        }
+
+        private int GetNearMinesCount(Cell cell)
+        {
+            int minesCount = 0;
+
+            for (int h = -1; h <= 1; h++)
+            {
+                for (int w = -1; w <= 1; w++)
+                {
+                    bool isMine = this.Cells[cell.XLoc + w,cell.YLoc + h].CellType == CellType.Mine;
+                    if (isMine)
+                    {
+                        minesCount++;
+                    }
+                }
+            }
+
+            return minesCount;
+        }
+
         private void GenerateMinesOnBoard()
         {
             var r = new Random();
@@ -81,7 +122,7 @@ namespace Minesweeper.Core
                 int h = r.Next(0, this.Height);
                 int w = r.Next(0, this.Width);
                 this.Cells[w, h].CellType = CellType.Mine;
-                this.Cells[w, h].OnClick();
+                this.Cells[w, h].OnClick(); // OPEN WHERE ARE MINES
 
             }
         }

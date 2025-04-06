@@ -61,11 +61,11 @@ namespace Minesweeper.Core
                 this.BackColor = Color.Red;
                 this.Text = "X";
             }
-            //if (this.CellState == CellState.Opened)
-            //{
-            //    this.ForeColor = this.GetCellColour();
-            //    this.Text = $"{NumMines}";
-            //}
+            if (this.CellState == CellState.Opened && this.CellType != CellType.Mine)
+            {
+                this.ForeColor = this.GetCellColour();
+                this.Text = $"{NumMines}";
+            }
         }
 
         /// <summary>
