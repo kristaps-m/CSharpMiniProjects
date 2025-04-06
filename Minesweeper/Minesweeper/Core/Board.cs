@@ -75,15 +75,12 @@ namespace Minesweeper.Core
 
         private void GenerateMinesCountOnBoard()
         {
-            for (int h = 1; h < this.Height-1; h++)
+            for (int h = 0; h < this.Height; h++)
             {
-                for (int w = 1; w < this.Width-1; w++)
+                for (int w = 0; w < this.Width; w++)
                 {
                     Cell c = this.Cells[w, h];
-                    //if (c.CellType == CellType.Mine)
-                    //{
-                    //    minesCount++;
-                    //}
+
                     if(c.CellType != CellType.Mine)
                     {
                         int nearMinesNumber = this.GetNearMinesCount(c);
@@ -102,10 +99,15 @@ namespace Minesweeper.Core
             {
                 for (int w = -1; w <= 1; w++)
                 {
-                    bool isMine = this.Cells[cell.XLoc + w,cell.YLoc + h].CellType == CellType.Mine;
-                    if (isMine)
+                    int newX = cell.XLoc + w;
+                    int newY = cell.YLoc + h;
+                    if (newX >= 0 && newX < this.Width && newY >= 0 && newY < this.Height)
                     {
-                        minesCount++;
+                        bool isMine = this.Cells[newX, newY].CellType == CellType.Mine;
+                        if (isMine)
+                        {
+                            minesCount++;
+                        }
                     }
                 }
             }
