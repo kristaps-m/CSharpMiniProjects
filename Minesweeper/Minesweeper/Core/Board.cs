@@ -10,6 +10,8 @@ namespace Minesweeper.Core
         public int Height { get; set; }
         public int NumMines { get; set; }
         public Cell[,] Cells { get; set; }
+        public bool IsGameOver { get; set; } = false;
+        public bool IsGameWon { get; set; } = false;
 
         public Board(Minesweeper minesweeper, int width, int height, int mines)
         {

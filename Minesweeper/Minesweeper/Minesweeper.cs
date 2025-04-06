@@ -17,7 +17,7 @@ namespace Minesweeper
         {
             InitializeComponent();
 
-            var board = new Board(this, 9, 9, 10);
+            var board = new Board(this, 9, 9, 5);
             board.SetupBoard();
         }
 

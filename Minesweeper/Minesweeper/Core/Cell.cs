@@ -31,7 +31,7 @@ namespace Minesweeper.Core
 
         public void SetupDesign()
         {
-            this.BackColor = SystemColors.ButtonFace;
+            this.BackColor = Color.DarkGray;
             this.Location = new Point(XLoc * CellSize, YLoc * CellSize);
             this.Size = new Size(CellSize, CellSize);
             this.UseVisualStyleBackColor = false;
@@ -46,10 +46,25 @@ namespace Minesweeper.Core
 
         public void OnFlag()
         {
-            if (this.CellState == CellState.Closed && this.CellType != CellType.Flagged)
+            if (!this.Board.IsGameOver && !this.Board.IsGameWon)
             {
-                this.CellType = CellType.Flagged;
-                this.Text = "F";
+
+                    if (this.CellState == CellState.Closed && this.CellType != CellType.Flagged)
+                {
+                    //if (this.CellType == CellType.Mine)
+                    //{
+                    //    this.CellType = CellType.FlaggedMine;
+                    //}
+                    //else
+                    //{
+                        this.CellType = CellType.Flagged;
+                    //}
+                    this.Text = "F";
+                } else if (this.CellState == CellState.Closed && this.CellType == CellType.Flagged)
+                {
+                    this.CellType = CellType.Regular;
+                    this.Text = null;
+                }
             }
         }
 
@@ -60,79 +75,76 @@ namespace Minesweeper.Core
 
         public void OnClick(Cell[,] theCels, bool recursiveCall = false)
         {
-
             //----------------
-            if (this.CellType != CellType.Flagged && this.CellType == CellType.Mine)
+            if (!this.Board.IsGameOver && !this.Board.IsGameWon)
             {
-                this.BackColor = Color.Red;
-                this.Text = "X";
-                // gameOver = true;
-                // isPaused = true;
-            }
-            else
-            {
-                var queue = new List<Cell>();
-                queue.Add(this);
-
-                while (queue.Count > 0)
+                if (this.CellType != CellType.Flagged && this.CellType == CellType.Mine)
                 {
-                    var currentCell = queue[queue.Count - 1];
-                    queue.RemoveAt(queue.Count - 1);
+                    this.BackColor = Color.Red;
+                    this.Text = "X";
+                    //isGameover = true;
+                    this.Board.IsGameOver = true;
+                    MessageBox.Show("GAME OVER!");
+                    //Form_FormClosing(); // Add weird message box that does not work?
 
-                    if (currentCell != null)
+                    // gameOver = true;
+                    // isPaused = true;
+                }
+                else
+                {
+                    var queue = new List<Cell>();
+                    queue.Add(this);
+
+                    while (queue.Count > 0)
                     {
-                        int x = currentCell.XLoc;
-                        int y = currentCell.YLoc;
+                        var currentCell = queue[queue.Count - 1];
+                        queue.RemoveAt(queue.Count - 1);
 
-                        if (theCels[x,y].CellState == CellState.Closed
-                            && theCels[x,y].CellType != CellType.Flagged)
-                        //if (currentCell.CellState == CellState.Closed && currentCell.CellType != CellType.Flagged)
+                        if (currentCell != null)
                         {
-                            theCels[x,y].CellState = CellState.Opened;
-                            //this.OnClick(true);
-                            //if (this.CellState == CellState.Opened && this.CellType != CellType.Mine)
-                            if (theCels[x, y].CellState == CellState.Opened && theCels[x, y].CellType != CellType.Mine)
-                            {
-                                theCels[x, y].ForeColor = this.GetCellColour(theCels[x, y].NumMines);
-                                theCels[x, y].Text = $"{theCels[x, y].NumMines}";
-                            }
+                            int x = currentCell.XLoc;
+                            int y = currentCell.YLoc;
 
-                            if (this.NumMines == 0)
+                            if (theCels[x,y].CellState == CellState.Closed
+                                && theCels[x,y].CellType != CellType.Flagged)
+                            //if (currentCell.CellState == CellState.Closed && currentCell.CellType != CellType.Flagged)
                             {
-                                // Add adjacent cells to the queue
-                                /*
-                                for (const direction of DIRECTIONS) {
-                                    const NEW_ROW = row + direction.row;
-                                    const NEW_COL = col + direction.col;
-
-                                    if (
-                                      NEW_ROW >= 0 &&
-                                      NEW_ROW < TEMP_MINE_FIELD.length &&
-                                      NEW_COL >= 0 &&
-                                      NEW_COL < TEMP_MINE_FIELD[0].length
-                                    )
-                                    {
-                                        QUEUE.push({ row: NEW_ROW, col: NEW_COL });
-                                    }
-                                }
-                                */
-                                foreach (var item in this.directions)
+                                theCels[x,y].CellState = CellState.Opened;
+                                if (theCels[x, y].CellState == CellState.Opened && theCels[x, y].CellType != CellType.Mine)
                                 {
-                                    int newX = x + item.X;
-                                    int newY = y + item.Y;
-                                    if (newX >= 0 && newX < this.Board.Width
-                                        && newY >= 0 && newY < this.Board.Height)
+                                    theCels[x, y].BackColor = Color.LightGray;
+                                    theCels[x, y].ForeColor = this.GetCellColour(theCels[x, y].NumMines);
+                                    theCels[x, y].Text = $"{theCels[x, y].NumMines}";
+                                }
+
+                                if (theCels[x, y].NumMines == 0 && theCels[x, y].CellType != CellType.Flagged)
+                                {
+                                    foreach (var item in this.directions)
                                     {
-                                        Cell c = new Cell();
-                                        c.XLoc = newX;
-                                        c.YLoc = newY;
-                                        queue.Add(theCels[newX,newY]);
+                                        int newX = x + item.X;
+                                        int newY = y + item.Y;
+                                        if (newX >= 0 && newX < this.Board.Width
+                                            && newY >= 0 && newY < this.Board.Height)
+                                        {
+                                            Cell c = new Cell();
+                                            c.XLoc = newX;
+                                            c.YLoc = newY;
+                                            queue.Add(theCels[newX,newY]);
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
+
+            }
+            this.Board.IsGameWon = this.IsGameWon(theCels);
+            if (this.Board.IsGameWon && !this.Board.IsGameOver)
+            {
+                this.Board.IsGameWon = true;
+                this.Board.IsGameOver = true;
+                MessageBox.Show("You Have Won The Game");
             }
 
             //theCels[this.XLoc, this.YLoc].CellState = CellState.Opened;
@@ -163,6 +175,23 @@ namespace Minesweeper.Core
             //}
         }
 
+        private bool IsGameWon(Cell[,] theCells)
+        {
+            int openedCells = 0;
+
+            foreach (var c in theCells)
+            {
+                if (c.CellState == CellState.Opened)
+                {
+                    openedCells++;
+                }
+            }
+
+            return openedCells == this.Board.Width * this.Board.Height - this.Board.NumMines;
+        }
+
+        //public static System.Windows.Forms.DialogResult Show(string text);
+
         /// <summary>
         /// Return the colour code associated with the number of surrounding mines
         /// </summary>
@@ -188,7 +217,19 @@ namespace Minesweeper.Core
                 case 8:
                     return ColorTranslator.FromHtml("0x000000"); // 8
                 default:
-                    return ColorTranslator.FromHtml("0xffffff");
+                    return Color.LightGray; // 0 mines color is same as background!
+            }
+        }
+
+        private void Form_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            const string a = "aaaaaaaaaaaaa";
+            const string c = "cccccccccccccccccc";
+            var r = MessageBox.Show(a, c, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (r == DialogResult.No)
+            {
+                e.Cancel = true;
             }
         }
     }
