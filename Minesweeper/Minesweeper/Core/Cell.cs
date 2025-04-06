@@ -36,6 +36,11 @@ namespace Minesweeper.Core
             this.UseVisualStyleBackColor = false;
             this.Font = new Font("Verdana", 15.75F, FontStyle.Bold);
             //this.ForeColor = Color.Red; // sets all num colors to red :)
+            //if(this.CellType == CellType.Mine)
+            //{
+            //    this.BackColor = Color.Red;
+            //    this.Text = "X";
+            //}
         }
 
         public void OnFlag()
@@ -51,11 +56,16 @@ namespace Minesweeper.Core
         {
             this.CellState = CellState.Opened;
             //this.GetCellColour();
-            if (this.CellState == CellState.Opened)
+            if (this.CellType == CellType.Mine)
             {
-                this.ForeColor = this.GetCellColour();
-                this.Text = $"{NumMines}";
+                this.BackColor = Color.Red;
+                this.Text = "X";
             }
+            //if (this.CellState == CellState.Opened)
+            //{
+            //    this.ForeColor = this.GetCellColour();
+            //    this.Text = $"{NumMines}";
+            //}
         }
 
         /// <summary>
