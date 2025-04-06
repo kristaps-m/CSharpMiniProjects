@@ -29,6 +29,7 @@ namespace Minesweeper.Core
                     Cell cell = new Cell
                     {
                         CellState = CellState.Closed,
+                        CellType = CellType.Regular,
                         //
                         CellSize = 50,
                         Board = this,
@@ -36,15 +37,8 @@ namespace Minesweeper.Core
                         XLoc = w, // !!! For some reason width goes to Xloc
                         YLoc = h,
                     };
-                    //if (h == 0 && w == 1)
-                    //{
-                    //    cell.NumMines = -9;
-                    //}
-                    //if (cell.XLoc == 0 && cell.YLoc == 1)
-                    //{
-                    //    cell.NumMines = -5;
-                    //}
 
+                    //cell.OnClick();
                     cell.SetupDesign();
                     cell.MouseDown += Cell_MouseClick;
 
@@ -56,6 +50,11 @@ namespace Minesweeper.Core
             //Console.WriteLine(this.Cells[1,1].CellType);
             this.GenerateMinesOnBoard();
             this.GenerateMinesCountOnBoard();
+
+            //foreach (var c in this.Cells)
+            //{
+            //        c.OnClick();
+            //}
             //var c = new Cell
             //{
             //    CellState = CellState.Closed,
@@ -85,7 +84,6 @@ namespace Minesweeper.Core
                     {
                         int nearMinesNumber = this.GetNearMinesCount(c);
                         c.NumMines = nearMinesNumber;
-
                     }
                 }
             }
@@ -124,7 +122,7 @@ namespace Minesweeper.Core
                 int h = r.Next(0, this.Height);
                 int w = r.Next(0, this.Width);
                 this.Cells[w, h].CellType = CellType.Mine;
-                this.Cells[w, h].OnClick(); // OPEN WHERE ARE MINES
+                //this.Cells[w, h].OnClick(); // OPEN WHERE ARE MINES
 
             }
         }
@@ -158,7 +156,7 @@ namespace Minesweeper.Core
             switch (e.Button)
             {
                 case MouseButtons.Left:
-                    cell.OnClick();
+                    cell.OnClick(this.Cells);
                     break;
 
                 case MouseButtons.Right:
