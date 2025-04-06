@@ -35,14 +35,7 @@ namespace Minesweeper.Core
             this.Size = new Size(CellSize, CellSize);
             this.UseVisualStyleBackColor = false;
             this.Font = new Font("Verdana", 15.75F, FontStyle.Bold);
-            //if (this.CellState == CellState.Opened)
-            //{
-            //    this.Text = $"{NumMines}";
-            //}
-            //if (this.CellState == CellState.Closed && this.CellType == CellType.Flagged)
-            //{
-            //    this.Text = "F";
-            //}
+            //this.ForeColor = Color.Red; // sets all num colors to red :)
         }
 
         public void OnFlag()
@@ -57,8 +50,10 @@ namespace Minesweeper.Core
         public void OnClick(bool recursiveCall = false)
         {
             this.CellState = CellState.Opened;
+            //this.GetCellColour();
             if (this.CellState == CellState.Opened)
             {
+                this.ForeColor = this.GetCellColour();
                 this.Text = $"{NumMines}";
             }
         }
