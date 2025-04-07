@@ -12,6 +12,7 @@ namespace Minesweeper.Core
         public Cell[,] Cells { get; set; }
         public bool IsGameOver { get; set; } = false;
         public bool IsGameWon { get; set; } = false;
+        private bool IsGameStarded { get; set; } = false;
 
         public Board(Minesweeper minesweeper, int width, int height, int mines)
         {
@@ -50,12 +51,12 @@ namespace Minesweeper.Core
             }
             //this.Cells[1, 1].CellType = CellType.Mine;
             //Console.WriteLine(this.Cells[1,1].CellType);
-            this.GenerateMinesOnBoard();
-            this.GenerateMinesCountOnBoard();
+            //this.GenerateMinesOnBoard();
+            //this.CreateNumThatShowsMinesAround();
 
             //foreach (var c in this.Cells)
             //{
-            //        c.OnClick();
+            //    c.OnClick();
             //}
             //var c = new Cell
             //{
@@ -74,7 +75,7 @@ namespace Minesweeper.Core
             //this.Minesweeper.Controls.Add(c);
         }
 
-        private void GenerateMinesCountOnBoard()
+        private void CreateNumThatShowsMinesAround()
         {
             for (int h = 0; h < this.Height; h++)
             {
@@ -115,21 +116,23 @@ namespace Minesweeper.Core
             return minesCount;
         }
 
-        private void GenerateMinesOnBoard()
+        private void GenerateMinesOnBoard(Cell cell)
         {
             var r = new Random();
 
-            while (this.CountExistingMinesOnBoard() < this.NumMines)
+            while (this.CountAllExistingMinesOnBoard() < this.NumMines)
             {
                 int h = r.Next(0, this.Height);
                 int w = r.Next(0, this.Width);
-                this.Cells[w, h].CellType = CellType.Mine;
-                //this.Cells[w, h].OnClick(); // OPEN WHERE ARE MINES
-
+                // Make sure first click is NEVER a mine(BOOOM! Game Over!)
+                if (cell.XLoc != w && cell.YLoc != h)
+                {
+                    this.Cells[w, h].CellType = CellType.Mine;
+                }
             }
         }
 
-        private int CountExistingMinesOnBoard()
+        private int CountAllExistingMinesOnBoard()
         {
             int minesCount = 0;
 
@@ -151,6 +154,12 @@ namespace Minesweeper.Core
         private void Cell_MouseClick(object sender, MouseEventArgs e)
         {
             var cell = (Cell)sender;
+            if (!this.IsGameStarded)
+            {
+                this.GenerateMinesOnBoard(cell);
+                this.CreateNumThatShowsMinesAround();
+                this.IsGameStarded = true;
+            }
 
             if (cell.CellState == CellState.Opened)
                 return;
@@ -158,6 +167,7 @@ namespace Minesweeper.Core
             switch (e.Button)
             {
                 case MouseButtons.Left:
+                    //cell.OnClick();
                     cell.OnClick(this.Cells);
                     break;
 

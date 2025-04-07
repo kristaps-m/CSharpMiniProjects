@@ -36,12 +36,6 @@ namespace Minesweeper.Core
             this.Size = new Size(CellSize, CellSize);
             this.UseVisualStyleBackColor = false;
             this.Font = new Font("Verdana", 15.75F, FontStyle.Bold);
-            //this.ForeColor = Color.Red; // sets all num colors to red :)
-            //if(this.CellType == CellType.Mine)
-            //{
-            //    this.BackColor = Color.Red;
-            //    this.Text = "X";
-            //}
         }
 
         public void OnFlag()
@@ -51,24 +45,33 @@ namespace Minesweeper.Core
 
                     if (this.CellState == CellState.Closed && this.CellType != CellType.Flagged)
                 {
-                    //if (this.CellType == CellType.Mine)
-                    //{
-                    //    this.CellType = CellType.FlaggedMine;
-                    //}
-                    //else
-                    //{
+                    if (this.CellType == CellType.Mine)
+                    {
+                        this.CellType = CellType.FlaggedMine;
+                    }
+                    else
+                    {
                         this.CellType = CellType.Flagged;
-                    //}
-                    this.Text = "F";
-                } else if (this.CellState == CellState.Closed && this.CellType == CellType.Flagged)
+                    }
+                    this.Text = "?";
+                } else if (this.CellState == CellState.Closed
+                    && (this.CellType == CellType.Flagged || this.CellType == CellType.FlaggedMine))
                 {
-                    this.CellType = CellType.Regular;
+                    if (this.CellType == CellType.FlaggedMine)
+                    {
+                        this.CellType = CellType.Mine;
+                    }
+                    else
+                    {
+                        this.CellType = CellType.Regular;
+                    }
+
                     this.Text = null;
                 }
             }
         }
 
-        private List<Point> directions = new List<Point> {
+        private readonly List<Point> directions = new List<Point> {
             new Point(-1,0), new Point(1,0), new Point(0,-1), new Point(0,1),
             new Point(-1,-1), new Point(1,1), new Point(-1,1), new Point(1,-1)
         };
@@ -80,9 +83,23 @@ namespace Minesweeper.Core
             {
                 if (this.CellType != CellType.Flagged && this.CellType == CellType.Mine)
                 {
+                    foreach (var c in theCels)
+                    {
+                        if (c.CellType == CellType.Mine)
+                        {
+                            theCels[c.XLoc, c.YLoc].BackColor = Color.LightPink;
+                            theCels[c.XLoc, c.YLoc].Text = "x";
+                        }
+                        else if (c.CellType == CellType.FlaggedMine)
+                        {
+                            theCels[c.XLoc, c.YLoc].BackColor = Color.LightPink;
+                            theCels[c.XLoc, c.YLoc].ForeColor = Color.Green;
+                            theCels[c.XLoc, c.YLoc].Text = "?";
+                        }
+                    }
                     this.BackColor = Color.Red;
                     this.Text = "X";
-                    //isGameover = true;
+
                     this.Board.IsGameOver = true;
                     MessageBox.Show("GAME OVER!");
                     //Form_FormClosing(); // Add weird message box that does not work?
@@ -105,11 +122,11 @@ namespace Minesweeper.Core
                             int x = currentCell.XLoc;
                             int y = currentCell.YLoc;
 
-                            if (theCels[x,y].CellState == CellState.Closed
-                                && theCels[x,y].CellType != CellType.Flagged)
+                            if (theCels[x, y].CellState == CellState.Closed
+                                && theCels[x, y].CellType != CellType.Flagged)
                             //if (currentCell.CellState == CellState.Closed && currentCell.CellType != CellType.Flagged)
                             {
-                                theCels[x,y].CellState = CellState.Opened;
+                                theCels[x, y].CellState = CellState.Opened;
                                 if (theCels[x, y].CellState == CellState.Opened && theCels[x, y].CellType != CellType.Mine)
                                 {
                                     theCels[x, y].BackColor = Color.LightGray;
@@ -129,7 +146,7 @@ namespace Minesweeper.Core
                                             Cell c = new Cell();
                                             c.XLoc = newX;
                                             c.YLoc = newY;
-                                            queue.Add(theCels[newX,newY]);
+                                            queue.Add(theCels[newX, newY]);
                                         }
                                     }
                                 }
@@ -155,7 +172,7 @@ namespace Minesweeper.Core
             //    theCels[this.XLoc, this.YLoc].Text = $"{this.NumMines}";
             //}
 
-            //this.CellState = CellState.Opened;
+            //    this.CellState = CellState.Opened;
             //if (this.CellType == CellType.Mine)
             //{
             //    this.CellState = CellState.Opened;

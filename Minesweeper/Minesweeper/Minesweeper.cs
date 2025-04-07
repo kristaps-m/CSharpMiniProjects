@@ -1,29 +1,33 @@
 ﻿using Minesweeper.Core;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Minesweeper
 {
     public partial class Minesweeper : Form
     {
+        private Board Board { get; set; }
+
         public Minesweeper()
         {
             InitializeComponent();
-
-            var board = new Board(this, 9, 9, 5);
-            board.SetupBoard();
+            this.Board  = new Board(this, 9, 9, 10);
+            //var board = new Board(this, 9, 9, 10);
+            this.Board.SetupBoard();
         }
 
         private void Minesweeper_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void NewGame_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Does `NewGame` button works?");
+            //InitializeComponent();
+
+            this.Board = new Board(this, 9, 9, 10);
+            this.Board.SetupBoard();
         }
     }
 }
