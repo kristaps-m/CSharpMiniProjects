@@ -10,16 +10,19 @@ namespace Minesweeper.Core
         public int Height { get; set; }
         public int NumMines { get; set; }
         public Cell[,] Cells { get; set; }
+        public int CellSize { get; set; }
         public bool IsGameOver { get; set; } = false;
         public bool IsGameWon { get; set; } = false;
         private bool IsGameStarded { get; set; } = false;
+        //private int SpaceFromTopForButtons { get; } = 70;
 
-        public Board(Minesweeper minesweeper, int width, int height, int mines)
+        public Board(Minesweeper minesweeper, int width, int height, int mines, int cellSize)
         {
             this.Minesweeper = minesweeper;
             this.Width = width;
             this.Height = height;
             this.NumMines = mines;
+            this.CellSize = cellSize;
             this.Cells = new Cell[width, height];
         }
 
@@ -34,7 +37,7 @@ namespace Minesweeper.Core
                         CellState = CellState.Closed,
                         CellType = CellType.Regular,
                         //
-                        CellSize = 50,
+                        CellSize = this.CellSize,
                         Board = this,
                         //NumMines = h,
                         XLoc = w, // !!! For some reason width goes to Xloc

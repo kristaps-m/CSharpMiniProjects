@@ -28,6 +28,7 @@ namespace Minesweeper.Core
         public CellType CellType { get; set; }
         public int NumMines { get; set; }
         public Board Board { get; set; }
+        private float FontSize { get; set; }
 
         public void SetupDesign()
         {
@@ -35,7 +36,8 @@ namespace Minesweeper.Core
             this.Location = new Point(XLoc * CellSize, YLoc * CellSize);
             this.Size = new Size(CellSize, CellSize);
             this.UseVisualStyleBackColor = false;
-            this.Font = new Font("Verdana", 15.75F, FontStyle.Bold);
+            this.FontSize = this.Board.CellSize < 30 ? 11.0F : 14.75F;
+            this.Font = new Font("Verdana", this.FontSize, FontStyle.Bold);
         }
 
         public void OnFlag()
