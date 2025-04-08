@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Minesweeper.Core
@@ -121,19 +124,69 @@ namespace Minesweeper.Core
 
         private void GenerateMinesOnBoard(Cell cell)
         {
-            var r = new Random();
-
-            while (this.CountAllExistingMinesOnBoard() < this.NumMines)
+            //var r = new Random();
+            var arrayOfPos = GenerateRandomMinePositions(cell);
+            foreach (var p in arrayOfPos)
             {
-                int h = r.Next(0, this.Height);
-                int w = r.Next(0, this.Width);
-                // Make sure first click is NEVER a mine(BOOOM! Game Over!)
-                if (cell.XLoc != w && cell.YLoc != h)
+                this.Cells[p.X, p.Y].CellType = CellType.Mine;
+            }
+            //Console.WriteLine(arrayOfPos);
+            //while (this.CountAllExistingMinesOnBoard() < this.NumMines)
+            //{
+            //    int h = r.Next(0, this.Height);
+            //    int w = r.Next(0, this.Width);
+            //    // Make sure first click is NEVER a mine(BOOOM! Game Over!)
+            //    if (cell.XLoc != w && cell.YLoc != h)
+            //    {
+            //        this.Cells[w, h].CellType = CellType.Mine;
+            //    }
+            //}
+        }
+        // This new method by chatGPT allows to create field 9x9 and 80 mines
+        // my method created very long loop.
+        private List<Point> GenerateRandomMinePositions(Cell cell)
+        {
+            var allPossiblePositions = new List<Point>();
+
+            for (int y = 0; y < this.Height; y++)
+            {
+                for (int x = 0; x < this.Width; x++)
                 {
-                    this.Cells[w, h].CellType = CellType.Mine;
+                    // Skip the clicked cell
+                    if (x == cell.XLoc && y == cell.YLoc)
+                        continue;
+
+                    allPossiblePositions.Add(new Point(x, y));
                 }
             }
+
+            // Shuffle the list
+            var r = new Random();
+            allPossiblePositions = allPossiblePositions.OrderBy(p => r.Next()).ToList();
+
+            // Take the first N positions
+            return allPossiblePositions.Take(this.NumMines).ToList();
         }
+        //private List<Point> GenerateRandomMinePositions(Cell cell)
+        //{
+        //    var r = new Random();
+        //    var arrayOfPos = new List<Point>();
+
+        //    while (arrayOfPos.Count < this.NumMines)
+        //    {
+        //        int h = r.Next(0, this.Height); // YLoc
+        //        int w = r.Next(0, this.Width); // XLoc
+        //        var p = new Point(w, h);
+        //        var canNotContainThisPoint = new Point(cell.XLoc, cell.YLoc);
+        //        if (!arrayOfPos.Contains(p)
+        //            && !arrayOfPos.Contains(canNotContainThisPoint))
+        //        {
+        //            arrayOfPos.Add(p);
+        //        }
+        //    }
+
+        //    return arrayOfPos;
+        //}
 
         private int CountAllExistingMinesOnBoard()
         {
