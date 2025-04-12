@@ -52,28 +52,24 @@ namespace Minesweeper
             // Adjust form size to fit grid (optional: fine-tune later)
             this.ClientSize = new Size(width * cellSize + 120, height * cellSize + offsetY + 10); // 50 = cell size
 
-            //if ( result == DialogResult.Yes )
-            //{
-                //MessageBox.Show("Does `NewGame` button works?");
-                var cellsToRemove = new List<Control>();
-                foreach (Control control in this.Controls)
+            var cellsToRemove = new List<Control>();
+            foreach (Control control in this.Controls)
+            {
+                if (control is Cell)
                 {
-                    if (control is Cell)
-                    {
-                        cellsToRemove.Add(control);
-                    }
+                    cellsToRemove.Add(control);
                 }
+            }
 
-                // Now remove them safely outside the loop
-                foreach (var cell in cellsToRemove)
-                {
-                    this.Controls.Remove(cell);
-                    cell.Dispose(); // Important to release resources
-                }
+            // Now remove them safely outside the loop
+            foreach (var cell in cellsToRemove)
+            {
+                this.Controls.Remove(cell);
+                cell.Dispose(); // Important to release resources
+            }
 
-                this.Board = new Board(this, width, height, mines, cellSize);
-                this.Board.SetupBoard();
-            //}
+            this.Board = new Board(this, width, height, mines, cellSize);
+            this.Board.SetupBoard();
         }
 
         private void topPanel_Paint(object sender, PaintEventArgs e)

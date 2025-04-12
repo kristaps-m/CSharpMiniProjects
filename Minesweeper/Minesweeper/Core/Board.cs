@@ -37,12 +37,6 @@ namespace Minesweeper.Core
 
         public void SetupBoard()
         {
-            //this.Cells = new Cell[,]
-            //{
-            //    { new Cell { CellType = CellType.Mine }, new Cell{ CellType = CellType.Mine }, new Cell() },
-            //    { new Cell() , new Cell(), new Cell() },
-            //    { new Cell(), new Cell(), new Cell() }
-            //};
             for (int h = 0; h < this.Height; h++)
             {
                 for (int w = 0; w < this.Width; w++)
@@ -51,20 +45,11 @@ namespace Minesweeper.Core
                     {
                         CellState = CellState.Closed,
                         CellType = CellType.Regular,
-                        //
                         CellSize = this.CellSize,
                         Board = this,
-                        //NumMines = h,
                         XLoc = w, // !!! For some reason width goes to Xloc
                         YLoc = h,
                     };
-                    //var cell = this.Cells[w, h];
-                    //cell.CellState = CellState.Closed;
-                    //cell.CellSize = this.CellSize;
-                    //cell.Board = this;
-                    //cell.XLoc = w;
-                    //cell.YLoc = h;
-                    //cell.OnClick();
                     cell.SetupDesign();
                     cell.MouseDown += Cell_MouseClick;
 
@@ -72,30 +57,11 @@ namespace Minesweeper.Core
                     this.Minesweeper.Controls.Add(cell);
                 }
             }
-            //this.Cells[1, 1].CellType = CellType.Mine;
-            //Console.WriteLine(this.Cells[1,1].CellType);
-            //this.GenerateMinesOnBoard();
-            //this.CreateNumThatShowsMinesAround();
-
+            // open all cels for testing
             //foreach (var c in this.Cells)
             //{
             //    c.OnClick();
             //}
-            //var c = new Cell
-            //{
-            //    CellState = CellState.Closed,
-            //    CellType = CellType.Mine,
-            //    CellSize = 50,
-            //    Board = this,
-            //    NumMines = 1,
-            //    XLoc = 0,
-            //    YLoc = 0,
-            //};
-            //c.SetupDesign();
-            //c.MouseDown += Cell_MouseClick;
-
-            //this.Cells[0, 0] = c;
-            //this.Minesweeper.Controls.Add(c);
         }
 
         public void CreateNumThatShowsMinesAround()
@@ -115,6 +81,7 @@ namespace Minesweeper.Core
             }
         }
 
+        // UnitTested inside CreateNumThatShowsMinesAround()
         private int GetNearMinesCount(Cell cell)
         {
             int minesCount = 0;
@@ -141,13 +108,13 @@ namespace Minesweeper.Core
 
         private void GenerateMinesOnBoard(Cell cell)
         {
-            //var r = new Random();
             var arrayOfPos = GenerateRandomMinePositions(cell);
             foreach (var p in arrayOfPos)
             {
                 this.Cells[p.X, p.Y].CellType = CellType.Mine;
             }
-            //Console.WriteLine(arrayOfPos);
+
+            //var r = new Random();
             //while (this.CountAllExistingMinesOnBoard() < this.NumMines)
             //{
             //    int h = r.Next(0, this.Height);
@@ -184,6 +151,7 @@ namespace Minesweeper.Core
             // Take the first N positions
             return allPossiblePositions.Take(this.NumMines).ToList();
         }
+        // My methods...
         //private List<Point> GenerateRandomMinePositions(Cell cell)
         //{
         //    var r = new Random();
@@ -205,24 +173,24 @@ namespace Minesweeper.Core
         //    return arrayOfPos;
         //}
 
-        private int CountAllExistingMinesOnBoard()
-        {
-            int minesCount = 0;
+        //private int CountAllExistingMinesOnBoard()
+        //{
+        //    int minesCount = 0;
 
-            for (int h = 0; h < this.Height; h++)
-            {
-                for (int w = 0; w < this.Width; w++)
-                {
-                    Cell c = this.Cells[w, h];
-                    if (c.CellType == CellType.Mine)
-                    {
-                        minesCount++;
-                    }
-                }
-            }
+        //    for (int h = 0; h < this.Height; h++)
+        //    {
+        //        for (int w = 0; w < this.Width; w++)
+        //        {
+        //            Cell c = this.Cells[w, h];
+        //            if (c.CellType == CellType.Mine)
+        //            {
+        //                minesCount++;
+        //            }
+        //        }
+        //    }
 
-            return minesCount;
-        }
+        //    return minesCount;
+        //}
 
         private void Cell_MouseClick(object sender, MouseEventArgs e)
         {
