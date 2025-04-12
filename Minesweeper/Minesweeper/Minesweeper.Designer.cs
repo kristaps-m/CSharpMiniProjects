@@ -41,7 +41,7 @@
             this.NewGame.Name = "NewGame";
             this.NewGame.Size = new System.Drawing.Size(75, 23);
             this.NewGame.TabIndex = 0;
-            this.NewGame.Text = "NewGame";
+            this.NewGame.Text = "NewGame?";
             this.NewGame.UseVisualStyleBackColor = false;
             this.NewGame.Click += new System.EventHandler(this.NewGame_Click);
             // 

@@ -17,9 +17,8 @@ namespace Minesweeper.Core
         public bool IsGameOver { get; set; } = false;
         public bool IsGameWon { get; set; } = false;
         private bool IsGameStarded { get; set; } = false;
-        //private int SpaceFromTopForButtons { get; } = 70;
 
-        public Board(Minesweeper minesweeper, int width, int height, int mines, int cellSize)
+        public Board(Minesweeper minesweeper, int width, int height, int mines, int cellSize = 45)
         {
             this.Minesweeper = minesweeper;
             this.Width = width;
@@ -29,8 +28,21 @@ namespace Minesweeper.Core
             this.Cells = new Cell[width, height];
         }
 
+        public Board(int width, int height, int mines)
+        {
+            this.Width = width;
+            this.Height = height;
+            this.NumMines = mines;
+        }
+
         public void SetupBoard()
         {
+            //this.Cells = new Cell[,]
+            //{
+            //    { new Cell { CellType = CellType.Mine }, new Cell{ CellType = CellType.Mine }, new Cell() },
+            //    { new Cell() , new Cell(), new Cell() },
+            //    { new Cell(), new Cell(), new Cell() }
+            //};
             for (int h = 0; h < this.Height; h++)
             {
                 for (int w = 0; w < this.Width; w++)
@@ -46,7 +58,12 @@ namespace Minesweeper.Core
                         XLoc = w, // !!! For some reason width goes to Xloc
                         YLoc = h,
                     };
-
+                    //var cell = this.Cells[w, h];
+                    //cell.CellState = CellState.Closed;
+                    //cell.CellSize = this.CellSize;
+                    //cell.Board = this;
+                    //cell.XLoc = w;
+                    //cell.YLoc = h;
                     //cell.OnClick();
                     cell.SetupDesign();
                     cell.MouseDown += Cell_MouseClick;
@@ -81,7 +98,7 @@ namespace Minesweeper.Core
             //this.Minesweeper.Controls.Add(c);
         }
 
-        private void CreateNumThatShowsMinesAround()
+        public void CreateNumThatShowsMinesAround()
         {
             for (int h = 0; h < this.Height; h++)
             {
